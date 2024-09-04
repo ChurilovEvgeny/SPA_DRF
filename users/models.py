@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 # Пример команды для создания суперпользователя (Обязательно через --email)
 # python manage.py createsuperuser --email test@test.ru
 class UserManager(BaseUserManager):
@@ -55,3 +56,5 @@ class User(AbstractUser):
     def __str__(self):
         return self.email
 
+    def get_email(self):
+        return self.email
