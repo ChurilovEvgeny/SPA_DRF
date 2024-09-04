@@ -31,13 +31,11 @@ class Habit(models.Model):
     PERIOD_DISABLE = "DISABLE"
     PERIOD_EVERY_DAY = "EVERY_DAY"
     PERIOD_EVERY_WEEK = "EVERY_WEEK"
-    PERIOD_EVERY_MONTH = "EVERY_MONTH"
 
     PERIOD_CHOICES = {
         PERIOD_DISABLE: "Отключено",
         PERIOD_EVERY_DAY: "Ежедневно",
         PERIOD_EVERY_WEEK: "Еженедельно",
-        PERIOD_EVERY_MONTH: "Ежемесячно",
     }
 
     user = models.ForeignKey(
@@ -82,9 +80,15 @@ class Habit(models.Model):
         default="DISABLE",
     )
 
-    reward = models.CharField(max_length=150, verbose_name="Вознаграждение", **NULLABLE)
+    reward = models.CharField(max_length=150, verbose_name="Вознаграждение", default="")
 
-    time_to_complete = models.PositiveIntegerField(verbose_name="Время на выполнение, c", default=120)
+    time_to_complete = models.PositiveIntegerField(
+        verbose_name="Время на выполнение, c", default=120
+    )
+
+    # priority = models.IntegerField(
+    #     validators=[validators.MinValueValidator(0), validators.MaxValueValidator(100)])
+
     is_public = models.BooleanField(verbose_name="Признак публичности", default=False)
 
     def __str__(self):
