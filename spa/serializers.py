@@ -10,13 +10,13 @@ class PlaceSerializer(serializers.Serializer):
         fields = "__all__"
 
 
-class ActionSerializer(serializers.Serializer):
+class ActionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Action
         fields = "__all__"
 
 
-class HabitSerializer(serializers.Serializer):
+class HabitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Habit
         fields = "__all__"

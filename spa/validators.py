@@ -46,7 +46,7 @@ class TimeToHabitCompleteValidator:
         self.field = field
 
     def __call__(self, value: dict):
-        if value.get(self.field, "") > MAXIMUM_TIME_TO_HABIT_COMPLETE:
+        if int(value.get(self.field, "")) > MAXIMUM_TIME_TO_HABIT_COMPLETE:
             raise serializers.ValidationError(
                 f"Время на выполнение привычки указано больше чем {MAXIMUM_TIME_TO_HABIT_COMPLETE} секунд"
             )
@@ -63,14 +63,14 @@ class IsPleasantHabitValidator:
         if value.get(self.field, False):
             for field in self.related_fields:
                 related_value = value.get(field, None)
-                if related_value is not None or related_value != "":
+                if not (related_value is None or related_value == ""):
                     raise serializers.ValidationError(
                         "У приятной привычки не может быть вознаграждения или связанной привычки"
                     )
 
 
 class RelatedHabitValidator:
-    """Валидатор проверяет, что связанная привычка попадает только в привычки с признаком приятной привычки."""
+    """Валидатор проверяет, что в связанную привычку попадает только привычка с признаком приятной привычки."""
 
     def __init__(self, field):
         self.field = field

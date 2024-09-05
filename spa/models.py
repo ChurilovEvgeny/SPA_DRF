@@ -4,6 +4,15 @@ from users.models import User
 
 NULLABLE = {"blank": True, "null": True}
 
+PERIOD_DISABLE = "DISABLE"
+PERIOD_EVERY_DAY = "EVERY_DAY"
+PERIOD_EVERY_WEEK = "EVERY_WEEK"
+
+PERIOD_CHOICES = {
+    PERIOD_DISABLE: "Отключено",
+    PERIOD_EVERY_DAY: "Ежедневно",
+    PERIOD_EVERY_WEEK: "Еженедельно",
+}
 
 class Place(models.Model):
     name = models.CharField(max_length=150, verbose_name="Название места")
@@ -28,16 +37,6 @@ class Action(models.Model):
 
 
 class Habit(models.Model):
-    PERIOD_DISABLE = "DISABLE"
-    PERIOD_EVERY_DAY = "EVERY_DAY"
-    PERIOD_EVERY_WEEK = "EVERY_WEEK"
-
-    PERIOD_CHOICES = {
-        PERIOD_DISABLE: "Отключено",
-        PERIOD_EVERY_DAY: "Ежедневно",
-        PERIOD_EVERY_WEEK: "Еженедельно",
-    }
-
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
