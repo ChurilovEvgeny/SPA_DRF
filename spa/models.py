@@ -14,6 +14,7 @@ PERIOD_CHOICES = {
     PERIOD_EVERY_WEEK: "Еженедельно",
 }
 
+
 class Place(models.Model):
     name = models.CharField(max_length=150, verbose_name="Название места")
 

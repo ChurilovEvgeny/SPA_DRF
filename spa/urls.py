@@ -10,6 +10,7 @@ from spa.views import (
     HabitRetrieveAPIView,
     HabitUpdateAPIView,
     HabitDeleteAPIView,
+    HabitPublicListAPIView,
 )
 
 app_name = SpaConfig.name
@@ -22,7 +23,12 @@ action_router.register(r"actions", ActionViewSet, basename="actions")
 urlpatterns = (
     [
         path("habit/create/", HabitCreateAPIView.as_view(), name="habit-create"),
-        path("habit/list/", HabitListAPIView.as_view(), name="habit-list"),
+        path("habit/list/my/", HabitListAPIView.as_view(), name="habit-list-my"),
+        path(
+            "habit/list/public/",
+            HabitPublicListAPIView.as_view(),
+            name="habit-list-public",
+        ),
         path("habit/<int:pk>/", HabitRetrieveAPIView.as_view(), name="habit-retrieve"),
         path(
             "habit/update/<int:pk>/", HabitUpdateAPIView.as_view(), name="habit-update"

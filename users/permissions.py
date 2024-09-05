@@ -5,7 +5,7 @@ class IsOwner(permissions.BasePermission):
     message = "Вы не являетесь владельцем"
 
     def has_object_permission(self, request, view, obj):
-        return obj.owner == request.user
+        return obj.user == request.user
 
 
 class IsSelfProfile(permissions.BasePermission):

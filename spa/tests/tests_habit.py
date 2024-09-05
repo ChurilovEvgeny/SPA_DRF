@@ -1,4 +1,4 @@
-import datetime
+from django.utils import timezone
 
 from rest_framework import status
 from rest_framework.reverse import reverse
@@ -14,7 +14,7 @@ from users.models import User
 # coverage report -m - получение отчета с пропущенными строками
 
 
-class HabitTestCaseAuthenticated(APITestCase):
+class HabitTestCaseCreateValidationAuthenticated(APITestCase):
     """Данные тесты описывают авторизованного пользователя и его же доступ к своим же данным"""
 
     def setUp(self) -> None:
@@ -40,11 +40,13 @@ class HabitTestCaseAuthenticated(APITestCase):
             user=self.user,
             place=self.place,
             action=self.action,
-            date_time=datetime.datetime(1997, 10, 19, 12, 0, 0),
+            date_time=timezone.datetime(
+                1997, 10, 19, 12, 0, 0, tzinfo=timezone.get_current_timezone()
+            ),
             is_pleasant=True,
             period=PERIOD_EVERY_DAY,
             time_to_complete=100,
-            is_public=False
+            is_public=False,
         )
         return habit
 
@@ -58,7 +60,7 @@ class HabitTestCaseAuthenticated(APITestCase):
             "period": PERIOD_EVERY_DAY,
             "reward": "Бургер",
             "time_to_complete": 120,
-            "is_public": False
+            "is_public": False,
         }
         response = self.client.post(reverse("spa:habit-create"), data=data)
 
@@ -77,7 +79,7 @@ class HabitTestCaseAuthenticated(APITestCase):
             "period": PERIOD_EVERY_DAY,
             "reward": "Бургер",
             "time_to_complete": 121,
-            "is_public": False
+            "is_public": False,
         }
         response = self.client.post(reverse("spa:habit-create"), data=data)
 
@@ -95,7 +97,7 @@ class HabitTestCaseAuthenticated(APITestCase):
             "period": PERIOD_EVERY_DAY,
             "reward": "Бургер",
             "time_to_complete": 120,
-            "is_public": False
+            "is_public": False,
         }
         response = self.client.post(reverse("spa:habit-create"), data=data)
 
@@ -114,7 +116,7 @@ class HabitTestCaseAuthenticated(APITestCase):
             "period": PERIOD_EVERY_DAY,
             "reward": "Бургер",
             "time_to_complete": 120,
-            "is_public": False
+            "is_public": False,
         }
         response = self.client.post(reverse("spa:habit-create"), data=data)
 
@@ -130,7 +132,7 @@ class HabitTestCaseAuthenticated(APITestCase):
             "period": PERIOD_EVERY_DAY,
             # "reward": "Бургер",
             "time_to_complete": 120,
-            "is_public": False
+            "is_public": False,
         }
         response = self.client.post(reverse("spa:habit-create"), data=data)
 
@@ -146,7 +148,7 @@ class HabitTestCaseAuthenticated(APITestCase):
             "period": PERIOD_EVERY_DAY,
             "reward": "Бургер",
             "time_to_complete": 120,
-            "is_public": False
+            "is_public": False,
         }
         response = self.client.post(reverse("spa:habit-create"), data=data)
 
@@ -162,7 +164,7 @@ class HabitTestCaseAuthenticated(APITestCase):
             "period": PERIOD_EVERY_DAY,
             # "reward": "Бургер",
             "time_to_complete": 120,
-            "is_public": False
+            "is_public": False,
         }
         response = self.client.post(reverse("spa:habit-create"), data=data)
 
@@ -183,7 +185,7 @@ class HabitTestCaseAuthenticated(APITestCase):
             "period": PERIOD_EVERY_DAY,
             # "reward": "Бургер",
             "time_to_complete": 120,
-            "is_public": False
+            "is_public": False,
         }
         response = self.client.post(reverse("spa:habit-create"), data=data)
 
@@ -202,9 +204,221 @@ class HabitTestCaseAuthenticated(APITestCase):
             "period": PERIOD_EVERY_DAY,
             # "reward": "Бургер",
             "time_to_complete": 120,
-            "is_public": False
+            "is_public": False,
         }
         response = self.client.post(reverse("spa:habit-create"), data=data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Habit.objects.count(), 2)
+
+
+class HabitTestCaseCreateDifferentUsers(APITestCase):
+    """Данные тесты описывают авторизованного пользователя и его же доступ к своим же данным"""
+
+    def setUp(self) -> None:
+        self.user1 = User.objects.create(email="user1@my.ru")
+        self.user2 = User.objects.create(email="user2@my.ru")
+        self.user3 = User.objects.create(email="user3@my.ru")
+
+        self.place = Place.objects.create(name="Дом")
+        self.action = Action.objects.create(name="Пробежка")
+        self.habit_user1 = Habit.objects.create(
+            user=self.user1,
+            place=self.place,
+            action=self.action,
+            date_time=timezone.datetime(
+                1997, 10, 19, 12, 0, 0, tzinfo=timezone.get_current_timezone()
+            ),
+            is_pleasant=False,
+            related_habit=None,
+            period=PERIOD_EVERY_DAY,
+            reward="Бургер",
+            time_to_complete=100,
+            is_public=False,
+        )
+
+        self.habit_user2 = Habit.objects.create(
+            user=self.user2,
+            place=self.place,
+            action=self.action,
+            date_time=timezone.datetime(
+                1997, 10, 19, 12, 0, 0, tzinfo=timezone.get_current_timezone()
+            ),
+            is_pleasant=False,
+            related_habit=None,
+            period=PERIOD_EVERY_DAY,
+            reward="Бургер",
+            time_to_complete=110,
+            is_public=False,
+        )
+
+        self.habit_public_user2 = Habit.objects.create(
+            user=self.user2,
+            place=self.place,
+            action=self.action,
+            date_time=timezone.datetime(
+                1997, 10, 19, 12, 0, 0, tzinfo=timezone.get_current_timezone()
+            ),
+            is_pleasant=False,
+            related_habit=None,
+            period=PERIOD_EVERY_DAY,
+            reward="Бургер",
+            time_to_complete=110,
+            is_public=True,
+        )
+
+    def test_not_authenticated_create(self):
+        data = {
+            "place": self.place.pk,
+            "action": self.action.pk,
+            "date_time": "1997-10-19 12:00:00",
+            "is_pleasant": False,
+            "period": PERIOD_EVERY_DAY,
+            "reward": "Бургер",
+            "time_to_complete": 120,
+            "is_public": False,
+        }
+        response = self.client.post(reverse("spa:habit-create"), data=data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_not_authenticated_my_list(self):
+        response = self.client.get(reverse("spa:habit-list-my"))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_not_authenticated_public_list(self):
+        response = self.client.get(reverse("spa:habit-list-public"))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_not_authenticated_retrieve(self):
+        response = self.client.get(
+            reverse("spa:habit-retrieve", args=(self.habit_user1.pk,))
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_not_authenticated_update(self):
+        data = {
+            "reward": "Сон",
+        }
+        response = self.client.patch(
+            reverse("spa:habit-update", args=(self.habit_user1.pk,)), data=data
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_not_authenticated_delete(self):
+        response = self.client.delete(
+            reverse("spa:habit-update", args=(self.habit_user1.pk,))
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_authenticated_my_list(self):
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(reverse("spa:habit-list-my"))
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(data["count"], 1)
+        self.assertEqual(data["results"][0]["id"], self.habit_user1.pk)
+        self.assertEqual(data["results"][0]["user"], self.user1.pk)
+
+    def test_authenticated_public_list(self):
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(reverse("spa:habit-list-public"))
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(data["count"], 1)
+        self.assertEqual(data["results"][0]["id"], self.habit_public_user2.pk)
+        self.assertEqual(data["results"][0]["user"], self.user2.pk)
+        self.assertEqual(
+            data["results"][0]["is_public"], self.habit_public_user2.is_public
+        )
+
+    def test_authenticated_my_retrieve(self):
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(
+            reverse("spa:habit-retrieve", args=(self.habit_user1.pk,))
+        )
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(data["id"], self.habit_user1.pk)
+        self.assertEqual(data["user"], self.user1.pk)
+
+    def test_authenticated_other_retrieve(self):
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(
+            reverse("spa:habit-retrieve", args=(self.habit_user2.pk,))
+        )
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_authenticated_other_public_retrieve(self):
+        """Так как в ТЗ
+        Пользователь может видеть список публичных привычек
+        без возможности их как-то редактировать или удалять.
+        Так как ТОЛЬКО список, то через retrieve доступ закрыт"""
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(
+            reverse("spa:habit-retrieve", args=(self.habit_public_user2.pk,))
+        )
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_authenticated_my_update(self):
+        self.client.force_authenticate(user=self.user1)
+        data = {
+            "reward": "Сон",
+        }
+        response = self.client.patch(
+            reverse("spa:habit-update", args=(self.habit_user1.pk,)), data=data
+        )
+        resp_data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(resp_data["id"], self.habit_user1.pk)
+        self.assertEqual(resp_data["user"], self.user1.pk)
+        self.assertEqual(resp_data["reward"], data["reward"])
+
+    def test_authenticated_other_update(self):
+        self.client.force_authenticate(user=self.user1)
+        data = {
+            "reward": "Сон",
+        }
+        response = self.client.patch(
+            reverse("spa:habit-update", args=(self.habit_user2.pk,)), data=data
+        )
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_authenticated_other_public_update(self):
+        self.client.force_authenticate(user=self.user1)
+        data = {
+            "reward": "Сон",
+        }
+        response = self.client.patch(
+            reverse("spa:habit-update", args=(self.habit_public_user2.pk,)), data=data
+        )
+        data = response.json()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_authenticated_my_delete(self):
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.delete(
+            reverse("spa:habit-delete", args=(self.habit_user1.pk,))
+        )
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Habit.objects.filter(pk=self.habit_user1.pk).exists())
+
+    def test_authenticated_other_delete(self):
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.delete(
+            reverse("spa:habit-delete", args=(self.habit_user2.pk,))
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_authenticated_other_public_delete(self):
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.delete(
+            reverse("spa:habit-delete", args=(self.habit_public_user2.pk,))
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

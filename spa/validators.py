@@ -46,10 +46,11 @@ class TimeToHabitCompleteValidator:
         self.field = field
 
     def __call__(self, value: dict):
-        if int(value.get(self.field, "")) > MAXIMUM_TIME_TO_HABIT_COMPLETE:
-            raise serializers.ValidationError(
-                f"Время на выполнение привычки указано больше чем {MAXIMUM_TIME_TO_HABIT_COMPLETE} секунд"
-            )
+        if self.field in value:
+            if value.get(self.field, 0) > MAXIMUM_TIME_TO_HABIT_COMPLETE:
+                raise serializers.ValidationError(
+                    f"Время на выполнение привычки указано больше чем {MAXIMUM_TIME_TO_HABIT_COMPLETE} секунд"
+                )
 
 
 class IsPleasantHabitValidator:
