@@ -12,7 +12,8 @@ from users.models import User
 
 
 class UserTestCaseAuthenticated(APITestCase):
-    """Данные тесты описывают авторизованного пользователя и его же доступ к своим же данным"""
+    """Данные тесты описывают авторизованного пользователя и его же
+    доступ к своим же данным"""
 
     def setUp(self) -> None:
         self.user = User.objects.create(email="user@my.ru")
@@ -52,7 +53,9 @@ class UserTestCaseAuthenticated(APITestCase):
         )
 
     def test_course_retrieve_self(self):
-        response = self.client.get(reverse("users:users-detail", args=(self.user.pk,)))
+        response = self.client.get(
+            reverse("users:users-detail", args=(self.user.pk,))
+        )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.json()
@@ -61,11 +64,15 @@ class UserTestCaseAuthenticated(APITestCase):
         self.assertEqual(data["is_active"], True)
 
     def test_course_retrieve_another(self):
-        response = self.client.get(reverse("users:users-detail", args=(self.user1.pk,)))
+        response = self.client.get(
+            reverse("users:users-detail", args=(self.user1.pk,))
+        )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.json()
-        self.assertEqual(data, {"id": self.user1.pk, "email": self.user1.email})
+        self.assertEqual(
+            data, {"id": self.user1.pk, "email": self.user1.email}
+        )
 
     def test_user_update_self(self):
         data = {"email": "new_email@my.ru"}
@@ -126,7 +133,9 @@ class UserTestCaseNotAuthenticated(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_course_retrieve(self):
-        response = self.client.get(reverse("users:users-detail", args=(self.user.pk,)))
+        response = self.client.get(
+            reverse("users:users-detail", args=(self.user.pk,))
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_user_update(self):
@@ -165,5 +174,7 @@ class TestJWTTestCase(APITestCase):
         )
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
 
-        resp = self.client.post(token_refresh_url, {"refresh": "abc"}, format="json")
+        resp = self.client.post(
+            token_refresh_url, {"refresh": "abc"}, format="json"
+        )
         self.assertEqual(resp.status_code, status.HTTP_401_UNAUTHORIZED)

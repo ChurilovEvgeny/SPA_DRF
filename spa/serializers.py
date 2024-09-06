@@ -24,7 +24,9 @@ class HabitSerializer(serializers.ModelSerializer):
             spa.validators.SelectOnlyRelatedHabitOrRewardValidator(
                 related_habit_field="related_habit", reward_field="reward"
             ),
-            spa.validators.TimeToHabitCompleteValidator(field="time_to_complete"),
+            spa.validators.TimeToHabitCompleteValidator(
+                field="time_to_complete"
+            ),
             spa.validators.IsPleasantHabitValidator(
                 field="is_pleasant", related_fields=("related_habit", "reward")
             ),

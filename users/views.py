@@ -14,7 +14,8 @@ class UserViewSet(ModelViewSet):
 
     def get_object(self):
         obj = super().get_object()
-        # Специально сохраняем получаемый объект, для получения нужного сериализатора
+        # Специально сохраняем получаемый объект,
+        # для получения нужного сериализатора
         self.user_obj = obj
         return obj
 

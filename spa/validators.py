@@ -6,7 +6,8 @@
 
 + Время выполнения должно быть не больше 120 секунд.
 
-+ В связанные привычки могут попадать только привычки с признаком приятной привычки.
++ В связанные привычки могут попадать только привычки с
++ признаком приятной привычки.
 
 + У приятной привычки не может быть вознаграждения или связанной привычки.
 
@@ -24,7 +25,8 @@ MAXIMUM_TIME_TO_HABIT_COMPLETE = (
 
 
 class SelectOnlyRelatedHabitOrRewardValidator:
-    """Валидатор исключает одновременный выбор связанной привычки и указания вознаграждения."""
+    """Валидатор исключает одновременный выбор связанной привычки
+    и указания вознаграждения."""
 
     def __init__(self, related_habit_field, reward_field):
         self.related_habit_field = related_habit_field
@@ -35,12 +37,14 @@ class SelectOnlyRelatedHabitOrRewardValidator:
         reward = value.get(self.reward_field, "")
         if related_habit is not None and reward != "":
             raise serializers.ValidationError(
-                "Нельзя указать связанную привычку и вознаграждение одновременно"
+                "Нельзя указать связанную привычку и "
+                "вознаграждение одновременно"
             )
 
 
 class TimeToHabitCompleteValidator:
-    """Валидатор проверяет время на выполнение привычки (не более MAXIMUM_TIME_TO_HABIT_COMPLETE)"""
+    """Валидатор проверяет время на выполнение привычки
+    (не более MAXIMUM_TIME_TO_HABIT_COMPLETE)"""
 
     def __init__(self, field):
         self.field = field
@@ -49,12 +53,14 @@ class TimeToHabitCompleteValidator:
         if self.field in value:
             if value.get(self.field, 0) > MAXIMUM_TIME_TO_HABIT_COMPLETE:
                 raise serializers.ValidationError(
-                    f"Время на выполнение привычки указано больше чем {MAXIMUM_TIME_TO_HABIT_COMPLETE} секунд"
+                    f"Время на выполнение привычки указано больше чем "
+                    f"{MAXIMUM_TIME_TO_HABIT_COMPLETE} секунд"
                 )
 
 
 class IsPleasantHabitValidator:
-    """Валидатор проверяет, что у приятной привычки не может быть вознаграждения или связанной привычки."""
+    """Валидатор проверяет, что у приятной привычки
+    не может быть вознаграждения или связанной привычки."""
 
     def __init__(self, field, related_fields):
         self.field = field
@@ -66,12 +72,14 @@ class IsPleasantHabitValidator:
                 related_value = value.get(field, None)
                 if not (related_value is None or related_value == ""):
                     raise serializers.ValidationError(
-                        "У приятной привычки не может быть вознаграждения или связанной привычки"
+                        "У приятной привычки не может быть вознаграждения "
+                        "или связанной привычки"
                     )
 
 
 class RelatedHabitValidator:
-    """Валидатор проверяет, что в связанную привычку попадает только привычка с признаком приятной привычки."""
+    """Валидатор проверяет, что в связанную привычку
+    попадает только привычка с признаком приятной привычки."""
 
     def __init__(self, field):
         self.field = field

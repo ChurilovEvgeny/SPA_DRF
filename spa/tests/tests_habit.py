@@ -15,7 +15,8 @@ from users.models import User
 
 
 class HabitTestCaseCreateValidationAuthenticated(APITestCase):
-    """Данные тесты описывают авторизованного пользователя и его же доступ к своим же данным"""
+    """Данные тесты описывают авторизованного пользователя и
+    его же доступ к своим же данным"""
 
     def setUp(self) -> None:
         self.user = User.objects.create(email="user@my.ru")
@@ -213,7 +214,8 @@ class HabitTestCaseCreateValidationAuthenticated(APITestCase):
 
 
 class HabitTestCaseCreateDifferentUsers(APITestCase):
-    """Данные тесты описывают авторизованного пользователя и его же доступ к своим же данным"""
+    """Данные тесты описывают авторизованного пользователя
+    и его же доступ к своим же данным"""
 
     def setUp(self) -> None:
         self.user1 = User.objects.create(email="user1@my.ru")
@@ -349,7 +351,6 @@ class HabitTestCaseCreateDifferentUsers(APITestCase):
         response = self.client.get(
             reverse("spa:habit-retrieve", args=(self.habit_user2.pk,))
         )
-        data = response.json()
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_authenticated_other_public_retrieve(self):
@@ -361,7 +362,6 @@ class HabitTestCaseCreateDifferentUsers(APITestCase):
         response = self.client.get(
             reverse("spa:habit-retrieve", args=(self.habit_public_user2.pk,))
         )
-        data = response.json()
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_authenticated_my_update(self):
@@ -396,7 +396,8 @@ class HabitTestCaseCreateDifferentUsers(APITestCase):
             "reward": "Сон",
         }
         response = self.client.patch(
-            reverse("spa:habit-update", args=(self.habit_public_user2.pk,)), data=data
+            reverse("spa:habit-update", args=(self.habit_public_user2.pk,)),
+            data=data,
         )
         data = response.json()
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

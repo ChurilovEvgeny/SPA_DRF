@@ -22,19 +22,31 @@ action_router.register(r"actions", ActionViewSet, basename="actions")
 
 urlpatterns = (
     [
-        path("habit/create/", HabitCreateAPIView.as_view(), name="habit-create"),
-        path("habit/list/my/", HabitListAPIView.as_view(), name="habit-list-my"),
+        path(
+            "habit/create/", HabitCreateAPIView.as_view(), name="habit-create"
+        ),
+        path(
+            "habit/list/my/", HabitListAPIView.as_view(), name="habit-list-my"
+        ),
         path(
             "habit/list/public/",
             HabitPublicListAPIView.as_view(),
             name="habit-list-public",
         ),
-        path("habit/<int:pk>/", HabitRetrieveAPIView.as_view(), name="habit-retrieve"),
         path(
-            "habit/update/<int:pk>/", HabitUpdateAPIView.as_view(), name="habit-update"
+            "habit/<int:pk>/",
+            HabitRetrieveAPIView.as_view(),
+            name="habit-retrieve",
         ),
         path(
-            "habit/delete/<int:pk>/", HabitDeleteAPIView.as_view(), name="habit-delete"
+            "habit/update/<int:pk>/",
+            HabitUpdateAPIView.as_view(),
+            name="habit-update",
+        ),
+        path(
+            "habit/delete/<int:pk>/",
+            HabitDeleteAPIView.as_view(),
+            name="habit-delete",
         ),
     ]
     + place_router.urls

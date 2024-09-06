@@ -80,16 +80,17 @@ class Habit(models.Model):
         default="DISABLE",
     )
 
-    reward = models.CharField(max_length=150, verbose_name="Вознаграждение", default="")
+    reward = models.CharField(
+        max_length=150, verbose_name="Вознаграждение", default=""
+    )
 
     time_to_complete = models.PositiveIntegerField(
         verbose_name="Время на выполнение, c", default=120
     )
 
-    # priority = models.IntegerField(
-    #     validators=[validators.MinValueValidator(0), validators.MaxValueValidator(100)])
-
-    is_public = models.BooleanField(verbose_name="Признак публичности", default=False)
+    is_public = models.BooleanField(
+        verbose_name="Признак публичности", default=False
+    )
 
     def __str__(self):
         return f"{self.user.email}: {self.place.name}, {self.action.name}"

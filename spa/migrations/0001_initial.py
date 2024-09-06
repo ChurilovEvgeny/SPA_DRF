@@ -28,7 +28,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "name",
-                    models.CharField(max_length=150, verbose_name="Название действия"),
+                    models.CharField(
+                        max_length=150, verbose_name="Название действия"
+                    ),
                 ),
             ],
             options={
@@ -50,7 +52,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "name",
-                    models.CharField(max_length=150, verbose_name="Название места"),
+                    models.CharField(
+                        max_length=150, verbose_name="Название места"
+                    ),
                 ),
             ],
             options={
@@ -70,7 +74,10 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("date_time", models.DateTimeField(verbose_name="Время выполнения")),
+                (
+                    "date_time",
+                    models.DateTimeField(verbose_name="Время выполнения"),
+                ),
                 (
                     "is_pleasant",
                     models.BooleanField(
