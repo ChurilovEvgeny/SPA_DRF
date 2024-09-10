@@ -1,4 +1,3 @@
-from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.utils import timezone
 
@@ -7,8 +6,16 @@ from users.models import User
 
 NULLABLE = {"blank": True, "null": True}
 
+
 class Place(models.Model):
     name = models.CharField(max_length=150, verbose_name="Название места")
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        **NULLABLE,
+        verbose_name="Пользователь",
+        related_name="places",
+    )
 
     def __str__(self):
         return self.name
@@ -20,6 +27,14 @@ class Place(models.Model):
 
 class Action(models.Model):
     name = models.CharField(max_length=150, verbose_name="Название действия")
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        **NULLABLE,
+        verbose_name="Пользователь",
+        related_name="actions",
+    )
 
     def __str__(self):
         return self.name

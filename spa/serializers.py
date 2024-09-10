@@ -4,7 +4,7 @@ from rest_framework import serializers
 from spa.models import Place, Action, Habit
 
 
-class PlaceSerializer(serializers.Serializer):
+class PlaceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Place
         fields = "__all__"

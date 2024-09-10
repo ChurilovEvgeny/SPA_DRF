@@ -8,27 +8,52 @@ from users.permissions import IsOwner
 
 
 class PlaceViewSet(viewsets.ModelViewSet):
+    """Место выполнения привычки"""
     serializer_class = PlaceSerializer
     queryset = Place.objects.all()
 
+    def perform_create(self, serializer):
+        obj = serializer.save(user=self.request.user)
+        obj.save()
+
+    def get_permissions(self):
+        if self.action in ("create", "retrieve", "list"):
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsAuthenticated, IsOwner]
+        return super().get_permissions()
+
 
 class ActionViewSet(viewsets.ModelViewSet):
+    """Действия привычки"""
     serializer_class = ActionSerializer
     queryset = Action.objects.all()
 
+    def perform_create(self, serializer):
+        obj = serializer.save(user=self.request.user)
+        obj.save()
+
+    def get_permissions(self):
+        if self.action in ("create", "retrieve", "list"):
+            self.permission_classes = [IsAuthenticated]
+        else:
+            self.permission_classes = [IsAuthenticated, IsOwner]
+        return super().get_permissions()
+
 
 class HabitCreateAPIView(generics.CreateAPIView):
+    """Создание привычки"""
     serializer_class = HabitSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        habit = serializer.save(user=self.request.user)
-        habit.set_next_execution_time()
-        habit.save()
+        obj = serializer.save(user=self.request.user)
+        obj.set_next_execution_time()
+        obj.save()
 
 
 class HabitListAPIView(generics.ListAPIView):
-    """View List для просмотра своих привычек"""
+    """Просмотр своих привычек"""
 
     serializer_class = HabitSerializer
     permission_classes = [IsAuthenticated, IsOwner]
@@ -41,7 +66,7 @@ class HabitListAPIView(generics.ListAPIView):
 
 
 class HabitPublicListAPIView(generics.ListAPIView):
-    """View List для просмотра ВСЕХ публичных привычек"""
+    """Просмотр всех публичных привычек"""
 
     serializer_class = HabitSerializer
     permission_classes = [IsAuthenticated]
@@ -50,12 +75,14 @@ class HabitPublicListAPIView(generics.ListAPIView):
 
 
 class HabitRetrieveAPIView(generics.RetrieveAPIView):
+    """Просмотр конкретной привычки"""
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]
 
 
 class HabitUpdateAPIView(generics.UpdateAPIView):
+    """Обновление привычки"""
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]
@@ -67,5 +94,6 @@ class HabitUpdateAPIView(generics.UpdateAPIView):
 
 
 class HabitDeleteAPIView(generics.DestroyAPIView):
+    """Удаление привычки"""
     queryset = Habit.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]
