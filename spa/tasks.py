@@ -12,7 +12,6 @@ def send_user_notification_in_telegram():
             second=0, microsecond=0
         )
     )
-    print(habits.query)
     for habit in habits:
         message = (
             f"Пора выполнять привычку!\n"
