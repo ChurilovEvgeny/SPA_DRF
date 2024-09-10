@@ -1,19 +1,11 @@
+from dateutil.relativedelta import relativedelta
 from django.db import models
+from django.utils import timezone
 
+from spa.services import get_next_day_date, get_next_week_date, get_next_minute_date, get_next_hour_date
 from users.models import User
 
 NULLABLE = {"blank": True, "null": True}
-
-PERIOD_DISABLE = "DISABLE"
-PERIOD_EVERY_DAY = "EVERY_DAY"
-PERIOD_EVERY_WEEK = "EVERY_WEEK"
-
-PERIOD_CHOICES = {
-    PERIOD_DISABLE: "Отключено",
-    PERIOD_EVERY_DAY: "Ежедневно",
-    PERIOD_EVERY_WEEK: "Еженедельно",
-}
-
 
 class Place(models.Model):
     name = models.CharField(max_length=150, verbose_name="Название места")
@@ -38,6 +30,20 @@ class Action(models.Model):
 
 
 class Habit(models.Model):
+    PERIOD_DISABLE = "DISABLE"
+    PERIOD_EVERY_MINUTE = "EVERY_MINUTE"
+    PERIOD_EVERY_HOUR = "EVERY_HOUR"
+    PERIOD_EVERY_DAY = "EVERY_DAY"
+    PERIOD_EVERY_WEEK = "EVERY_WEEK"
+
+    PERIOD_CHOICES = {
+        PERIOD_DISABLE: "Отключено",
+        PERIOD_EVERY_MINUTE: "Ежеминутно",
+        PERIOD_EVERY_HOUR: "Ежечасно",
+        PERIOD_EVERY_DAY: "Ежедневно",
+        PERIOD_EVERY_WEEK: "Еженедельно",
+    }
+
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -92,8 +98,35 @@ class Habit(models.Model):
         verbose_name="Признак публичности", default=False
     )
 
+    # заполняется программно в алгоритме, по умолчанию date_time_first_sent
+    date_time_next_sent = models.DateTimeField(
+        verbose_name="Дата и время следующего оповещения", **NULLABLE
+    )
+
     def __str__(self):
         return f"{self.user.email}: {self.place.name}, {self.action.name}"
+
+    def set_next_execution_time(self):
+        date_time_start = self.date_time.replace(second=0, microsecond=0)
+        now_time = timezone.now().replace(second=0, microsecond=0)
+
+        match self.period:
+            case self.PERIOD_EVERY_MINUTE:
+                self.date_time_next_sent = get_next_minute_date(date_time_start, now_time)
+
+            case self.PERIOD_EVERY_HOUR:
+                self.date_time_next_sent = get_next_hour_date(date_time_start, now_time)
+
+            case self.PERIOD_EVERY_DAY:
+                self.date_time_next_sent = get_next_day_date(date_time_start, now_time)
+
+            case self.PERIOD_EVERY_WEEK:
+                self.date_time_next_sent = get_next_week_date(date_time_start, now_time)
+
+            case _:
+                pass
+
+        self.save()
 
     class Meta:
         verbose_name = "Привычка"

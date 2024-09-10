@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "drf_spectacular",
     "corsheaders",
+    "django_celery_beat",
     "spa",
     "users",
 ]
@@ -150,3 +151,27 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
+
+# URL-адрес брокера сообщений
+CELERY_BROKER_URL = os.getenv("CELERY_BROKER_URL")
+
+# URL-адрес брокера результатов, также Redis
+CELERY_RESULT_BACKEND = os.getenv("CELERY_RESULT_BACKEND")
+
+# Часовой пояс для работы Celery
+CELERY_TIMEZONE = TIME_ZONE
+
+# Флаг отслеживания выполнения задач
+CELERY_TASK_TRACK_STARTED = True
+
+# Максимальное время на выполнение задачи
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_BEAT_SCHEDULE = {
+    'send_user_notification_in_telegram': {
+        'task': 'spa.tasks.send_user_notification_in_telegram',
+        'schedule': timedelta(minutes=1),
+    },
+}
+
+TELEGRAM_API_URL = "https://api.telegram.org"

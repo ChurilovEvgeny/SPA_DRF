@@ -23,6 +23,7 @@ class HabitCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         habit = serializer.save(user=self.request.user)
+        habit.set_next_execution_time()
         habit.save()
 
 
@@ -58,6 +59,11 @@ class HabitUpdateAPIView(generics.UpdateAPIView):
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]
+
+    def perform_update(self, serializer):
+        habit = serializer.save()
+        habit.set_next_execution_time()
+        habit.save()
 
 
 class HabitDeleteAPIView(generics.DestroyAPIView):

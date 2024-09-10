@@ -45,6 +45,7 @@ class User(AbstractUser):
 
     username = None
     email = models.EmailField(unique=True, verbose_name="Email")
+    telegram_bot_token = models.CharField(max_length=150, verbose_name="Telegram Bot токен", default="")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
@@ -54,7 +55,4 @@ class User(AbstractUser):
         verbose_name_plural = "Пользователи"
 
     def __str__(self):
-        return self.email
-
-    def get_email(self):
         return self.email
