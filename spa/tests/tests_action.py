@@ -1,10 +1,8 @@
-from django.utils import timezone
-
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
 
-from spa.models import Habit, Place, Action
+from spa.models import Action
 from users.models import User
 
 
@@ -47,8 +45,7 @@ class ActionTestCaseAuthenticated(APITestCase):
         self.assertEqual(data["name"], self.action.name)
 
     def test_list(self):
-        response = self.client.get(
-            reverse("spa:actions-list"))
+        response = self.client.get(reverse("spa:actions-list"))
 
         data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -66,7 +63,6 @@ class ActionTestCaseAuthenticated(APITestCase):
 
         self.assertEqual(data_resp["name"], data["name"])
 
-
     def test_delete(self):
         response = self.client.delete(
             reverse("spa:actions-detail", args=(self.action.pk,))
@@ -74,6 +70,7 @@ class ActionTestCaseAuthenticated(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Action.objects.filter(pk=self.action.pk).exists())
+
 
 class ActionTestCaseNotAuthenticated(APITestCase):
     """Данные тесты описывают не авторизованного пользователя"""
@@ -97,8 +94,7 @@ class ActionTestCaseNotAuthenticated(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_list(self):
-        response = self.client.get(
-            reverse("spa:actions-list"))
+        response = self.client.get(reverse("spa:actions-list"))
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -110,13 +106,13 @@ class ActionTestCaseNotAuthenticated(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-
     def test_delete(self):
         response = self.client.delete(
             reverse("spa:actions-detail", args=(self.action.pk,))
         )
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
 
 class ActionTestCaseAnotherUserAuthenticated(APITestCase):
     """Данные тесты описывают авторизованного пользователя"""
@@ -138,8 +134,7 @@ class ActionTestCaseAnotherUserAuthenticated(APITestCase):
         self.assertEqual(data["name"], self.action.name)
 
     def test_list(self):
-        response = self.client.get(
-            reverse("spa:actions-list"))
+        response = self.client.get(reverse("spa:actions-list"))
 
         data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -153,7 +148,6 @@ class ActionTestCaseAnotherUserAuthenticated(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
 
     def test_delete(self):
         response = self.client.delete(

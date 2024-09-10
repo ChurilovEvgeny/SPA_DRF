@@ -14,7 +14,9 @@ class Migration(migrations.Migration):
             model_name="habit",
             name="date_time_next_sent",
             field=models.DateTimeField(
-                blank=True, null=True, verbose_name="Дата и время следующего оповещения"
+                blank=True,
+                null=True,
+                verbose_name="Дата и время следующего оповещения",
             ),
         ),
         migrations.AlterField(

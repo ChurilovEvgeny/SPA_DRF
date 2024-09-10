@@ -9,6 +9,7 @@ from users.permissions import IsOwner
 
 class PlaceViewSet(viewsets.ModelViewSet):
     """Место выполнения привычки"""
+
     serializer_class = PlaceSerializer
     queryset = Place.objects.all()
 
@@ -26,6 +27,7 @@ class PlaceViewSet(viewsets.ModelViewSet):
 
 class ActionViewSet(viewsets.ModelViewSet):
     """Действия привычки"""
+
     serializer_class = ActionSerializer
     queryset = Action.objects.all()
 
@@ -43,6 +45,7 @@ class ActionViewSet(viewsets.ModelViewSet):
 
 class HabitCreateAPIView(generics.CreateAPIView):
     """Создание привычки"""
+
     serializer_class = HabitSerializer
     permission_classes = [IsAuthenticated]
 
@@ -76,6 +79,7 @@ class HabitPublicListAPIView(generics.ListAPIView):
 
 class HabitRetrieveAPIView(generics.RetrieveAPIView):
     """Просмотр конкретной привычки"""
+
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]
@@ -83,6 +87,7 @@ class HabitRetrieveAPIView(generics.RetrieveAPIView):
 
 class HabitUpdateAPIView(generics.UpdateAPIView):
     """Обновление привычки"""
+
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]
@@ -95,5 +100,6 @@ class HabitUpdateAPIView(generics.UpdateAPIView):
 
 class HabitDeleteAPIView(generics.DestroyAPIView):
     """Удаление привычки"""
+
     queryset = Habit.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]

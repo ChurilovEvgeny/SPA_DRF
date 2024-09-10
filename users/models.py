@@ -45,7 +45,9 @@ class User(AbstractUser):
 
     username = None
     email = models.EmailField(unique=True, verbose_name="Email")
-    telegram_bot_token = models.CharField(max_length=150, verbose_name="Telegram Bot токен", default="")
+    telegram_bot_token = models.CharField(
+        max_length=150, verbose_name="Telegram Bot токен", default=""
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []

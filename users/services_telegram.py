@@ -50,4 +50,3 @@ def send_message(message, bot_token, chat_id) -> bool:
 
 def sent_notification_in_telegram(message, bot_token) -> bool:
     return send_message(message, bot_token, get_chat_id(bot_token))
-

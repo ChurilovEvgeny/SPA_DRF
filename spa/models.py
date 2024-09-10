@@ -1,7 +1,12 @@
 from django.db import models
 from django.utils import timezone
 
-from spa.services import get_next_day_date, get_next_week_date, get_next_minute_date, get_next_hour_date
+from spa.services import (
+    get_next_day_date,
+    get_next_week_date,
+    get_next_minute_date,
+    get_next_hour_date,
+)
 from users.models import User
 
 NULLABLE = {"blank": True, "null": True}
@@ -127,16 +132,24 @@ class Habit(models.Model):
 
         match self.period:
             case self.PERIOD_EVERY_MINUTE:
-                self.date_time_next_sent = get_next_minute_date(date_time_start, now_time)
+                self.date_time_next_sent = get_next_minute_date(
+                    date_time_start, now_time
+                )
 
             case self.PERIOD_EVERY_HOUR:
-                self.date_time_next_sent = get_next_hour_date(date_time_start, now_time)
+                self.date_time_next_sent = get_next_hour_date(
+                    date_time_start, now_time
+                )
 
             case self.PERIOD_EVERY_DAY:
-                self.date_time_next_sent = get_next_day_date(date_time_start, now_time)
+                self.date_time_next_sent = get_next_day_date(
+                    date_time_start, now_time
+                )
 
             case self.PERIOD_EVERY_WEEK:
-                self.date_time_next_sent = get_next_week_date(date_time_start, now_time)
+                self.date_time_next_sent = get_next_week_date(
+                    date_time_start, now_time
+                )
 
             case _:
                 pass

@@ -53,7 +53,10 @@ class HabitTestCaseCreateValidationAuthenticated(APITestCase):
 
     def test_str(self):
         habit = self.add_pleasant_habit()
-        self.assertEqual(str(habit), f"{habit.user.email}: {habit.place.name}, {habit.action.name}")
+        self.assertEqual(
+            str(habit),
+            f"{habit.user.email}: {habit.place.name}, {habit.action.name}",
+        )
 
     def test_create_valid_habit(self):
         data = {
@@ -430,7 +433,8 @@ class HabitTestCaseCreateDifferentUsers(APITestCase):
 
 
 class HabitTestCaseCreateWithAnyPeriod(APITestCase):
-    """Данные тесты описывают создание привычки с разными периодами выполнения"""
+    """Данные тесты описывают создание привычки
+    с разными периодами выполнения"""
 
     def setUp(self) -> None:
         self.user = User.objects.create(email="user@my.ru")
@@ -473,7 +477,12 @@ class HabitTestCaseCreateWithAnyPeriod(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         habit = Habit.objects.last()
-        self.assertEqual(habit.date_time_next_sent, timezone.datetime(2024, 1, 14, 3, 22, tzinfo=timezone.timezone.utc))
+        self.assertEqual(
+            habit.date_time_next_sent,
+            timezone.datetime(
+                2024, 1, 14, 3, 22, tzinfo=timezone.timezone.utc
+            ),
+        )
 
     @freeze_time("2024-01-14 03:21:34", tz_offset=0)
     def test_create_every_hour(self):
@@ -492,7 +501,10 @@ class HabitTestCaseCreateWithAnyPeriod(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         habit = Habit.objects.last()
-        self.assertEqual(habit.date_time_next_sent, timezone.datetime(2024, 1, 14, 4, 0, tzinfo=timezone.timezone.utc))
+        self.assertEqual(
+            habit.date_time_next_sent,
+            timezone.datetime(2024, 1, 14, 4, 0, tzinfo=timezone.timezone.utc),
+        )
 
     @freeze_time("2024-01-14 03:21:34", tz_offset=0)
     def test_create_every_day(self):
@@ -511,7 +523,12 @@ class HabitTestCaseCreateWithAnyPeriod(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         habit = Habit.objects.last()
-        self.assertEqual(habit.date_time_next_sent, timezone.datetime(2024, 1, 14, 12, 0, tzinfo=timezone.timezone.utc))
+        self.assertEqual(
+            habit.date_time_next_sent,
+            timezone.datetime(
+                2024, 1, 14, 12, 0, tzinfo=timezone.timezone.utc
+            ),
+        )
 
     @freeze_time("2024-01-15 03:21:34", tz_offset=0)
     def test_create_every_week(self):
@@ -530,4 +547,9 @@ class HabitTestCaseCreateWithAnyPeriod(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         habit = Habit.objects.last()
-        self.assertEqual(habit.date_time_next_sent, timezone.datetime(2024, 1, 21, 12, 0, tzinfo=timezone.timezone.utc))
+        self.assertEqual(
+            habit.date_time_next_sent,
+            timezone.datetime(
+                2024, 1, 21, 12, 0, tzinfo=timezone.timezone.utc
+            ),
+        )

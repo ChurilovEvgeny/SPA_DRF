@@ -45,8 +45,7 @@ class PlaceTestCaseAuthenticated(APITestCase):
         self.assertEqual(data["name"], self.place.name)
 
     def test_list(self):
-        response = self.client.get(
-            reverse("spa:places-list"))
+        response = self.client.get(reverse("spa:places-list"))
 
         data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -95,8 +94,7 @@ class PlaceTestCaseNotAuthenticated(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_list(self):
-        response = self.client.get(
-            reverse("spa:places-list"))
+        response = self.client.get(reverse("spa:places-list"))
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -136,8 +134,7 @@ class PlaceTestCaseAnotherUserAuthenticated(APITestCase):
         self.assertEqual(data["name"], self.place.name)
 
     def test_list(self):
-        response = self.client.get(
-            reverse("spa:places-list"))
+        response = self.client.get(reverse("spa:places-list"))
 
         data = response.json()
         self.assertEqual(response.status_code, status.HTTP_200_OK)

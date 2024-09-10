@@ -168,9 +168,9 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
 CELERY_BEAT_SCHEDULE = {
-    'send_user_notification_in_telegram': {
-        'task': 'spa.tasks.send_user_notification_in_telegram',
-        'schedule': timedelta(minutes=1),
+    "send_user_notification_in_telegram": {
+        "task": "spa.tasks.send_user_notification_in_telegram",
+        "schedule": timedelta(minutes=1),
     },
 }
 
