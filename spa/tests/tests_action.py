@@ -22,6 +22,10 @@ class ActionTestCaseAuthenticated(APITestCase):
         self.client.force_authenticate(user=self.user)
         self.action = Action.objects.create(name="Пробежка", user=self.user)
 
+    def test_str(self):
+        action = Action.objects.get(pk=self.action.pk)
+        self.assertEqual(str(action), action.name)
+
     def test_create(self):
         data = {"name": "Приседание"}
         response = self.client.post(reverse("spa:actions-list"), data=data)

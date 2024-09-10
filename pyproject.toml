@@ -23,6 +23,7 @@ redis = "^5.0.8"
 eventlet = "^0.36.1"
 django-celery-beat = "^2.7.0"
 responses = "^0.25.3"
+freezegun = "^1.5.1"
 
 
 [build-system]

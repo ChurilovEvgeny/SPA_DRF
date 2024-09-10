@@ -113,7 +113,7 @@ class Habit(models.Model):
         verbose_name="Признак публичности", default=False
     )
 
-    # заполняется программно в алгоритме, по умолчанию date_time_first_sent
+    # заполняется программно в алгоритме
     date_time_next_sent = models.DateTimeField(
         verbose_name="Дата и время следующего оповещения", **NULLABLE
     )

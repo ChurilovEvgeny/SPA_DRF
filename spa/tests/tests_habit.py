@@ -1,5 +1,5 @@
 from django.utils import timezone
-
+from freezegun import freeze_time
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APITestCase
@@ -50,6 +50,10 @@ class HabitTestCaseCreateValidationAuthenticated(APITestCase):
             is_public=False,
         )
         return habit
+
+    def test_str(self):
+        habit = self.add_pleasant_habit()
+        self.assertEqual(str(habit), f"{habit.user.email}: {habit.place.name}, {habit.action.name}")
 
     def test_create_valid_habit(self):
         data = {
@@ -423,3 +427,107 @@ class HabitTestCaseCreateDifferentUsers(APITestCase):
             reverse("spa:habit-delete", args=(self.habit_public_user2.pk,))
         )
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class HabitTestCaseCreateWithAnyPeriod(APITestCase):
+    """Данные тесты описывают создание привычки с разными периодами выполнения"""
+
+    def setUp(self) -> None:
+        self.user = User.objects.create(email="user@my.ru")
+        self.place = Place.objects.create(name="Дом")
+        self.action = Action.objects.create(name="Пробежка")
+        self.client.force_authenticate(user=self.user)
+
+    def test_create_disable(self):
+        data = {
+            "place": self.place.pk,
+            "action": self.action.pk,
+            "date_time": "1997-10-19 12:00:00",
+            "is_pleasant": False,
+            "period": Habit.PERIOD_DISABLE,
+            "reward": "Бургер",
+            "time_to_complete": 120,
+            "is_public": False,
+        }
+        response = self.client.post(reverse("spa:habit-create"), data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        habit = Habit.objects.last()
+        self.assertEqual(habit.date_time_next_sent, None)
+
+    @freeze_time("2024-01-14 03:21:34", tz_offset=0)
+    def test_create_every_minute(self):
+        data = {
+            "place": self.place.pk,
+            "action": self.action.pk,
+            "date_time": "1997-10-19 12:00:00",
+            "is_pleasant": False,
+            "period": Habit.PERIOD_EVERY_MINUTE,
+            "reward": "Бургер",
+            "time_to_complete": 120,
+            "is_public": False,
+        }
+        response = self.client.post(reverse("spa:habit-create"), data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        habit = Habit.objects.last()
+        self.assertEqual(habit.date_time_next_sent, timezone.datetime(2024, 1, 14, 3, 22, tzinfo=timezone.timezone.utc))
+
+    @freeze_time("2024-01-14 03:21:34", tz_offset=0)
+    def test_create_every_hour(self):
+        data = {
+            "place": self.place.pk,
+            "action": self.action.pk,
+            "date_time": "1997-10-19 12:00:00",
+            "is_pleasant": False,
+            "period": Habit.PERIOD_EVERY_HOUR,
+            "reward": "Бургер",
+            "time_to_complete": 120,
+            "is_public": False,
+        }
+        response = self.client.post(reverse("spa:habit-create"), data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        habit = Habit.objects.last()
+        self.assertEqual(habit.date_time_next_sent, timezone.datetime(2024, 1, 14, 4, 0, tzinfo=timezone.timezone.utc))
+
+    @freeze_time("2024-01-14 03:21:34", tz_offset=0)
+    def test_create_every_day(self):
+        data = {
+            "place": self.place.pk,
+            "action": self.action.pk,
+            "date_time": "1997-10-19 12:00:00",
+            "is_pleasant": False,
+            "period": Habit.PERIOD_EVERY_DAY,
+            "reward": "Бургер",
+            "time_to_complete": 120,
+            "is_public": False,
+        }
+        response = self.client.post(reverse("spa:habit-create"), data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        habit = Habit.objects.last()
+        self.assertEqual(habit.date_time_next_sent, timezone.datetime(2024, 1, 14, 12, 0, tzinfo=timezone.timezone.utc))
+
+    @freeze_time("2024-01-15 03:21:34", tz_offset=0)
+    def test_create_every_week(self):
+        data = {
+            "place": self.place.pk,
+            "action": self.action.pk,
+            "date_time": "1997-10-19 12:00:00",
+            "is_pleasant": False,
+            "period": Habit.PERIOD_EVERY_WEEK,
+            "reward": "Бургер",
+            "time_to_complete": 120,
+            "is_public": False,
+        }
+        response = self.client.post(reverse("spa:habit-create"), data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        habit = Habit.objects.last()
+        self.assertEqual(habit.date_time_next_sent, timezone.datetime(2024, 1, 21, 12, 0, tzinfo=timezone.timezone.utc))

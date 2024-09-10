@@ -20,6 +20,10 @@ class PlaceTestCaseAuthenticated(APITestCase):
         self.client.force_authenticate(user=self.user)
         self.place = Place.objects.create(name="Работа", user=self.user)
 
+    def test_str(self):
+        place = Place.objects.get(pk=self.place.pk)
+        self.assertEqual(str(place), place.name)
+
     def test_create(self):
         data = {"name": "дом"}
         response = self.client.post(reverse("spa:places-list"), data=data)
