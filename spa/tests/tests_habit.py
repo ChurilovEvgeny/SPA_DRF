@@ -78,6 +78,23 @@ class HabitTestCaseCreateValidationAuthenticated(APITestCase):
         self.assertEqual(habit.place.pk, data["place"])
         self.assertEqual(habit.user, self.user)
 
+    def test_create_not_valid_period_choices(self):
+        data = {
+            "place": self.place.pk,
+            "action": self.action.pk,
+            "date_time": "1997-10-19 12:00:00",
+            "is_pleasant": False,
+            # "related_habit": None,
+            "period": "ANY_PERIOD",
+            "reward": "Бургер",
+            "time_to_complete": 120,
+            "is_public": False,
+        }
+        response = self.client.post(reverse("spa:habit-create"), data=data)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Habit.objects.count(), 0)
+
     def test_create_not_valid_habit_time_to_complete(self):
         data = {
             "place": self.place.pk,

@@ -175,3 +175,4 @@ CELERY_BEAT_SCHEDULE = {
 }
 
 TELEGRAM_API_URL = "https://api.telegram.org"
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")

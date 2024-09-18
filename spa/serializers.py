@@ -31,4 +31,5 @@ class HabitSerializer(serializers.ModelSerializer):
                 field="is_pleasant", related_fields=("related_habit", "reward")
             ),
             spa.validators.RelatedHabitValidator(field="related_habit"),
+            spa.validators.PeriodChoicesValidator(field="period"),
         ]
