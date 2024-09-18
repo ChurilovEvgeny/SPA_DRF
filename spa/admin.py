@@ -5,13 +5,19 @@ from spa.models import Place, Action, Habit
 
 @admin.register(Place)
 class PlaceAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = (
+        "id",
+        "name",
+    )
     list_filter = ("name",)
 
 
 @admin.register(Action)
 class ActionAdmin(admin.ModelAdmin):
-    list_display = ("name",)
+    list_display = (
+        "id",
+        "name",
+    )
     list_filter = ("name",)
 
 

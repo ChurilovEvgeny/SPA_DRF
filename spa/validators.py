@@ -19,6 +19,8 @@
 
 from rest_framework import serializers
 
+from spa.models import Habit
+
 MAXIMUM_TIME_TO_HABIT_COMPLETE = (
     120  # Максимальное время выполнения привычки (по ТЗ 120 сек)
 )
@@ -90,4 +92,17 @@ class RelatedHabitValidator:
             if not related_habit.is_pleasant:
                 raise serializers.ValidationError(
                     "Связанная привычка должна быть приятной"
+                )
+
+
+class PeriodChoicesValidator:
+    def __init__(self, field):
+        self.field = field
+
+    def __call__(self, value):
+        if self.field in value:
+            period = value.get(self.field)
+            if period not in Habit.PERIOD_CHOICES.keys():
+                raise serializers.ValidationError(
+                    f'Периодичность может быть только из списка: {", ".join(Habit.PERIOD_CHOICES.keys())}'
                 )
